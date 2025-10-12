@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smiley_toothy/screens/splash_screen/dart/splash_screen.dart';
 
 void main(){
   return runApp(MyApp());
@@ -16,9 +17,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Smiley Toothy",
-      home: Scaffold(
-        appBar: AppBar(title: Text("Smile"),),
-      ),
+      home: SplashScreen(),
     );
   }
 }
