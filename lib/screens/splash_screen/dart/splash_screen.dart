@@ -26,6 +26,32 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _finalSlideController;
   late Animation<Offset> _finalSlideAnimation;
 
+  Route _createSlideRoute(Widget page) {
+    return PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 900),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        // Drop-bounce effect using scale + fade
+        final scaleAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
+          CurvedAnimation(
+            parent: animation,
+            curve: Curves.elasticOut, // bounce drop effect
+          ),
+        );
+
+        final fadeAnimation = Tween<double>(
+          begin: 0.0,
+          end: 1.0,
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeIn));
+
+        return FadeTransition(
+          opacity: fadeAnimation,
+          child: ScaleTransition(scale: scaleAnimation, child: child),
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -81,15 +107,13 @@ class _SplashScreenState extends State<SplashScreen>
       setState(() => showSecondImage = true);
 
       _secImageSlideController.forward().then((_) {
-        // Delay a little before sliding both left
-        Future.delayed(const Duration(milliseconds: 500), () {
+        // ✅ Trigger final slide before navigating
 
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const LoadingScreen()),
-            );
-
-        });
+        // ✅ Navigate after final slide finishes
+        Navigator.pushReplacement(
+          context,
+          _createSlideRoute(const LoadingScreen()),
+        );
       });
     });
   }
@@ -139,10 +163,10 @@ class _SplashScreenState extends State<SplashScreen>
                       SlideTransition(
                         position: _secImageSlideAnimation,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
+                          padding: const EdgeInsets.only(left: 10.0),
                           child: Image.asset(
                             'assets/splash_screen_teeth.png',
-                            width: screenWidth * 0.3,
+                            width: screenWidth * 0.2,
                           ),
                         ),
                       ),
