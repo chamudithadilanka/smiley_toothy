@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:smiley_toothy/screens/register_screen/register_screen.dart';
 import '../../../color_theme/color_theme.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -30,6 +33,7 @@ class _LoadingScreenState extends State<LoadingScreen>
       end: -10,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.bounceInOut));
     _animateProgress();
+
   }
 
   @override
@@ -40,12 +44,23 @@ class _LoadingScreenState extends State<LoadingScreen>
 
   void _animateProgress() async {
     // Example: animate progress up and down smoothly
-    while (mounted) {
+    while (mounted && progress < 1) {
       await Future.delayed(const Duration(milliseconds: 100));
       setState(() {
         progress += 0.02;
-        if (progress > 1) progress = 0;
+        if (progress >=1) progress = 1;
       });
+
+
+    }
+    if (mounted) {
+      // Wait 100ms before navigation
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => RegisterScreen()),
+      );
     }
   }
 
