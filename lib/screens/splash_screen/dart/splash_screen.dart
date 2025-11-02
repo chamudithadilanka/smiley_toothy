@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
-import 'package:smiley_toothy/screens/loading_screen/dart/loading%20screen.dart';
+import 'package:smiley_toothy/screens/loading_screen/loading%20screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
