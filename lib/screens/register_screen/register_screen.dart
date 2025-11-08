@@ -6,13 +6,20 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            width: 100,
-            height: 300,
-            decoration: BoxDecoration(color: kMainBackgroundBlueDark),
+            width: screenWidth * 1.0,
+            height: screenHeight * 1.0,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [kMainBackgroundBlueNormal, kMainBackgroundBlueDark],
+              ),
+            ),
+            child: Column(children: []),
           ),
         ],
       ),

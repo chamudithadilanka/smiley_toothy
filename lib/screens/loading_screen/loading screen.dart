@@ -43,6 +43,26 @@ class _LoadingScreenState extends State<LoadingScreen>
     _bounceController.dispose(); // Clean up the controller
     super.dispose();
   }
+  //
+  // void _animateProgress() async {
+  //   // Example: animate progress up and down smoothly
+  //   while (mounted && progress < 1) {
+  //     await Future.delayed(const Duration(milliseconds: 155));
+  //     setState(() {
+  //       progress += 0.02;
+  //       if (progress >= 1) progress = 1;
+  //     });
+  //   }
+  //   if (mounted) {
+  //     // Wait 100ms before navigation
+  //     await Future.delayed(const Duration(milliseconds: 155));
+  //     if (!mounted) return;
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => RegisterScreen()),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
