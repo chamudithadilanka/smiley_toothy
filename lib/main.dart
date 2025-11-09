@@ -27,6 +27,20 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Smiley Toothy",
+      theme: ThemeData(
+        textTheme: TextTheme(
+          headlineLarge: const TextStyle(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+          ),
+          bodyLarge: const TextStyle(
+            fontFamily: 'Poppins',
+          ),
+          bodyMedium: const TextStyle(
+            fontFamily: 'Poppins',
+          ),
+        ),
+      ),
       home: BlocProvider(create: (_) => LoadingBloc(), child: SplashScreen()),
     );
   }

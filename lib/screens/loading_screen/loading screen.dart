@@ -97,7 +97,7 @@ class _LoadingScreenState extends State<LoadingScreen>
               children: [
                 // SizedBox(height: screenHeight * 0.02),
                 Image.asset(
-                  "assets/simley_toothy_loading_screen.png",
+                  "assets/image/simley_toothy_loading_screen.png",
                   width: screenWidth * 0.65,
                 ),
                 SizedBox(height: screenHeight * 0.05),
@@ -152,7 +152,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                       bottom: 18,
                       child: ClipRRect(
                         child: Image.asset(
-                          "assets/loading_screen_logo.png",
+                          "assets/image/loading_screen_logo.png",
                           width: 220,
                           height: 220,
                         ),
@@ -163,7 +163,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                 SizedBox(height: screenHeight * 0.06),
                 ClipRRect(
                   child: Image.asset(
-                    "assets/loading_screen_loading.png",
+                    "assets/image/loading_screen_loading.png",
                     width: 160,
                     height: 160,
                   ),

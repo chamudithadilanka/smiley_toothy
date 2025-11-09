@@ -19,7 +19,49 @@ class RegisterScreen extends StatelessWidget {
                 colors: [kMainBackgroundBlueNormal, kMainBackgroundBlueDark],
               ),
             ),
-            child: Column(children: []),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: screenHeight * 0.09),
+                Text(
+                  "Create Your Profile",
+                  style: TextStyle(
+                    color: kMainLoadingIndicatorYellowdark,
+                    fontFamily: "Poppins",
+                    fontSize: 26,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.01),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: Container(
+                    width: screenWidth * 0.34,
+                    height: screenHeight * 0.15,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      boxShadow: [
+                        BoxShadow(
+                          color: kMainLoadingIndicatorYellowdark.withOpacity(
+                            0.2,
+                          ),
+                          spreadRadius: 4,
+                          blurRadius: 2,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: kMainLoadingIndicatorYellowdark,
+                        width: 5,
+                      ),
+                      image: DecorationImage(
+                        image: AssetImage("assets/image/splash_screen_teeth.png"),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

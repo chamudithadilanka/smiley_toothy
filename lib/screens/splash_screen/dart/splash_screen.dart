@@ -155,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                     ScaleTransition(
                       scale: _scaleAnimation,
                       child: Image.asset(
-                        'assets/splash_screen_image.png',
+                        'assets/image/splash_screen_image.png',
                         width: screenWidth * 0.3,
                       ),
                     ),
@@ -165,7 +165,7 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Padding(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: Image.asset(
-                            'assets/splash_screen_teeth.png',
+                            'assets/image/splash_screen_teeth.png',
                             width: screenWidth * 0.2,
                           ),
                         ),
