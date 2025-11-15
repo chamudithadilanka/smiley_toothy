@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
+import 'package:smiley_toothy/screens/register_screen/widget/custom_text_feild.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -32,7 +33,7 @@ class RegisterScreen extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.01),
+                SizedBox(height: screenHeight * 0.03),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(100),
                   child: Container(
@@ -42,10 +43,12 @@ class RegisterScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                       boxShadow: [
                         BoxShadow(
-                          color: kMainLoadingIndicatorYellowdark.withValues(alpha: 0.4),
+                          color: kMainLoadingIndicatorYellowdark.withValues(
+                            alpha: 0.4,
+                          ),
                           spreadRadius: 9,
                           blurRadius: 3,
-                          offset: Offset(1,1 ),
+                          offset: Offset(1, 1),
                         ),
                       ],
                       border: Border.all(
@@ -53,14 +56,15 @@ class RegisterScreen extends StatelessWidget {
                         width: 5,
                       ),
                       image: DecorationImage(
-                        image: AssetImage("assets/image/splash_screen_teeth.png"),
+                        image: AssetImage(
+                          "assets/image/splash_screen_teeth.png",
+                        ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: screenHeight*0.2,),
-
-
+                SizedBox(height: screenHeight * 0.04),
+                CustomTextInputRegisterScreen(hintText: "Enter Your Name"),
               ],
             ),
           ),
