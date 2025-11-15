@@ -42,12 +42,10 @@ class RegisterScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(100),
                       boxShadow: [
                         BoxShadow(
-                          color: kMainLoadingIndicatorYellowdark.withOpacity(
-                            0.2,
-                          ),
-                          spreadRadius: 4,
-                          blurRadius: 2,
-                          offset: Offset(0, 0),
+                          color: kMainLoadingIndicatorYellowdark.withValues(alpha: 0.4),
+                          spreadRadius: 9,
+                          blurRadius: 3,
+                          offset: Offset(1,1 ),
                         ),
                       ],
                       border: Border.all(
@@ -60,6 +58,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: screenHeight*0.2,),
+
+
               ],
             ),
           ),
