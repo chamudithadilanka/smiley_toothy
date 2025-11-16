@@ -23,10 +23,10 @@ class CustomTextInputRegisterScreen extends StatelessWidget {
         cursorColor: kMianLoadingIndicatorYellowNormal,
         cursorErrorColor: Colors.red,
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+          contentPadding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
           labelText: hintText,
           labelStyle: TextStyle(
-            color: kMainLoadingIndicatorYellowdark,
+            color: kMainLoadingIndicatorYellowdark.withValues(alpha: 0.9),
                 fontWeight: FontWeight.w600
           ),
           enabledBorder: OutlineInputBorder(
@@ -34,14 +34,14 @@ class CustomTextInputRegisterScreen extends StatelessWidget {
               color: kMainLoadingIndicatorYellowdark,
               width: 5,
             ),
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(35),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: kMainLoadingIndicatorYellowdark,
               width: 5,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
       ),
