@@ -1,47 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
 
 class CustomTextInputRegisterScreen extends StatelessWidget {
   final TextEditingController controller = TextEditingController();
   final String hintText;
+  final bool isNumber;
+  final bool isHintText;
 
-  CustomTextInputRegisterScreen({super.key, required this.hintText});
+  CustomTextInputRegisterScreen({
+    super.key,
+    required this.hintText,
+    required this.isNumber,
+    required this.isHintText,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: TextFormField(
-        controller: controller,
-        cursorRadius: Radius.circular(100),
-        style: TextStyle(
-          color: kMainLoadingIndicatorYellowdark,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-        cursorWidth: 4,
-        cursorColor: kMianLoadingIndicatorYellowNormal,
-        cursorErrorColor: Colors.red,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(horizontal: 30,vertical: 15),
-          labelText: hintText,
-          labelStyle: TextStyle(
-            color: kMainLoadingIndicatorYellowdark.withValues(alpha: 0.9),
-                fontWeight: FontWeight.w600
+      child: SizedBox(
+        width: screenWidth * 0.9,
+        child: TextFormField(
+          keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+          inputFormatters:
+              isNumber ? [FilteringTextInputFormatter.digitsOnly] : [],
+          controller: controller,
+          cursorRadius: Radius.circular(100),
+          style: TextStyle(
+            color: kMainLoadingIndicatorYellowdark,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: kMainLoadingIndicatorYellowdark,
-              width: 5,
+          cursorWidth: 4,
+          cursorColor: kMianLoadingIndicatorYellowNormal,
+          cursorErrorColor: Colors.red,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            labelText: isHintText?  hintText : null,
+            labelStyle: TextStyle(
+              color: kMainLoadingIndicatorYellowdark.withValues(alpha: 0.9),
+              fontWeight: FontWeight.w600,
             ),
-            borderRadius: BorderRadius.circular(35),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: kMainLoadingIndicatorYellowdark,
-              width: 5,
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: kMainLoadingIndicatorYellowdark,
+                width: 5,
+              ),
+              borderRadius: BorderRadius.circular(35),
             ),
-            borderRadius: BorderRadius.circular(30),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(
+                color: kMainLoadingIndicatorYellowdark,
+                width: 5,
+              ),
+              borderRadius: BorderRadius.circular(30),
+            ),
           ),
         ),
       ),
