@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
 
 class CustomButtonRegister extends StatelessWidget {
-  const CustomButtonRegister({super.key});
+  final VoidCallback onPress;
+  const CustomButtonRegister({super.key, required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -14,21 +14,27 @@ class CustomButtonRegister extends StatelessWidget {
       height: screenHeight * 0.06,
       decoration: BoxDecoration(
         color: kMainLoadingWhitContainerColor.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: kMainLoadingIndicatorYellowdark, width: 3),
+        borderRadius: BorderRadius.circular(25),
+        boxShadow: [
+          BoxShadow(color: kMainLoadingWhitContainerColor.withValues(alpha: 0.2),
+          blurRadius: 4,
+            spreadRadius: 4,
+          )
+        ],
+        border: Border.all(color: kMainLoadingWhitContainerColor, width: 3),
       ),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
         ),
-        onPressed: () {},
+        onPressed: onPress,
         child: Text(
-          "Register",
+          "Submit",
           style: TextStyle(
-            fontSize: 26,
+            fontSize: 25,
             color: kMainLoadingWhitContainerColor,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

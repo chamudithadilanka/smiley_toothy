@@ -9,7 +9,6 @@ void main() {
       MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => LoadingBloc()),
-            // Add other blocs here if needed
           ],
           child: const MyApp(),));
 }

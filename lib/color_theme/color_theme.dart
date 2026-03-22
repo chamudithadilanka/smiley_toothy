@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 //background colors gradient
-final kMainBackgroundBlueNormal = Color(0xFF0067F6);
-final kMainBackgroundBlueDark = Color(0xFF0041EB);
+final kMainBackgroundBlueNormal = Color(0xFF006FFF); // Slight boost
+final kMainBackgroundBlueDark = Color(0xFF0048F5);   // Minimal change
 //loading indicator colors
 final kMianLoadingIndicatorYellowNormal = Color(0xFFFFEC85);
 final kMainLoadingIndicatorYellowdark = Color(0xFFEFC503);
