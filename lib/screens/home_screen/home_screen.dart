@@ -48,6 +48,7 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: kMainLoadingWhitContainerColor,
                         borderRadius: BorderRadius.circular(avatarSize / 1),
+                        border: Border.all(color: kMainLoadingIndicatorYellowdark,width: 3)
                       ),
                       child: Image.asset(
                         'assets/image/splash_screen_teeth.png',

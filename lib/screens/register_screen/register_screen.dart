@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
-import 'package:smiley_toothy/screens/home_screen/home_screen.dart';
+import 'package:smiley_toothy/screens/nav_bar_with_main_screen/main_screen.dart';
 import 'package:smiley_toothy/screens/register_screen/widget/custom_button.dart';
 import 'package:smiley_toothy/screens/register_screen/widget/custom_text_filed.dart';
 
@@ -90,7 +90,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: kMainLoadingIndicatorYellowdark,
                       ),
                     ),
-
                     Expanded(
                       child: SizedBox(
                         width: screenWidth * 0.0,
@@ -104,7 +103,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: screenHeight * 0.02),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -122,10 +120,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Expanded(
                       child: SizedBox(
                         width: screenWidth * 0.04,
-
                         child: DropdownButtonFormField<String>(
                           value: selectGender,
-
                           hint: Text(
                             "Select",
                             style: TextStyle(color: Colors.white),
@@ -133,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           style: TextStyle(
                             color: kMainLoadingWhitContainerColor.withValues(
                               alpha: 0.6,
-                            ), // Selected text color
+                            ),
                             fontSize: 18,
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -142,8 +138,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               horizontal: 12,
                               vertical: 15,
                             ),
-
-                            // Normal border
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: kMainLoadingIndicatorYellowdark,
@@ -159,21 +153,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          dropdownColor:
-                              Colors.white, // Dropdown background color
-                          items:
-                              ["Male", "Female"].map((item) {
-                                return DropdownMenuItem(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: TextStyle(
-                                      color: kMainLoadingIndicatorYellowdark,
-                                      fontWeight: FontWeight.w700,
-                                    ), // Dropdown item text color
-                                  ),
-                                );
-                              }).toList(),
+                          dropdownColor: Colors.white,
+                          items: ["Male", "Female"].map((item) {
+                            return DropdownMenuItem(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: TextStyle(
+                                  color: kMainLoadingIndicatorYellowdark,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                           onChanged: (value) {
                             setState(() {
                               selectGender = value;
@@ -186,44 +178,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.11),
-
                 CustomButtonRegister(
                   onPress: () {
-                    Navigator.push(
+                    Navigator.pushReplacement( // ✅ pushReplacement so back button won't return to register
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreenWithNavBar(),
+                      ),
                     );
                   },
                 ),
-                //time day and night
               ],
             ),
           ),
         ),
-
-        // Positioned(
-        //   bottom: screenHeight * 0.61,
-        //   right: screenWidth * 0.31,
-        //   child: Container(
-        //     padding: EdgeInsets.all(8),
-        //     decoration: BoxDecoration(
-        //       color: kMainLoadingWhitContainerColor,
-        //       shape: BoxShape.circle,
-        //       boxShadow: [
-        //         BoxShadow(
-        //           color: Colors.black26,
-        //           blurRadius: 4,
-        //           offset: Offset(2, 2),
-        //         ),
-        //       ],
-        //     ),
-        //     child: Icon(
-        //       Icons.camera_alt,
-        //       color: kMainLoadingIndicatorYellowdark,
-        //       size: 24,
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }
