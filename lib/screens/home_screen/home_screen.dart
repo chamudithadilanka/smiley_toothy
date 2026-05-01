@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
+import 'package:smiley_toothy/screens/home_screen/widgets/breething_tooth.dart';
 import 'package:smiley_toothy/screens/home_screen/widgets/home_screen_container_box.dart';
 import 'package:smiley_toothy/screens/home_screen/widgets/home_screen_container_box_left.dart';
 
@@ -29,7 +30,11 @@ class HomeScreen extends StatelessWidget {
         height: double.infinity,
         decoration: BoxDecoration(
           gradient: RadialGradient(
-            colors: [kMainBackgroundBlueNormal, kMainBackgroundBlueDark,kMainBackgroundBlueDark],
+            colors: [
+              kMainBackgroundBlueNormal,
+              kMainBackgroundBlueDark,
+              kMainBackgroundBlueDark,
+            ],
             radius: BorderSide.strokeAlignOutside,
           ),
         ),
@@ -48,7 +53,10 @@ class HomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: kMainLoadingWhitContainerColor,
                         borderRadius: BorderRadius.circular(avatarSize / 1),
-                        border: Border.all(color: kMainLoadingIndicatorYellowdark,width: 3)
+                        border: Border.all(
+                          color: kMainLoadingIndicatorYellowdark,
+                          width: 3,
+                        ),
                       ),
                       child: Image.asset(
                         'assets/image/splash_screen_teeth.png',
@@ -104,10 +112,49 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:  EdgeInsets.all(padAll),
+                padding: EdgeInsets.all(padAll),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [HomeScreenContainerBoxLeft(),HomeScreenContainerBoxRight()]),
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    HomeScreenContainerBoxLeft(),
+                    HomeScreenContainerBoxRight(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 70),
+              Container(
+                height: 320,
+                width: 320,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(200),
+                  border: Border.all(
+                    color: kMainLoadingWhitContainerColor,
+                    width: 10,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 260,
+                      height: 260,
+                      decoration: BoxDecoration(
+                        color: kMainLoadingWhitContainerColor.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(200),
+                        boxShadow: [
+                          BoxShadow(
+                            color: kMainLoadingWhitContainerColor.withOpacity(
+                              0.2,
+                            ),
+                            blurRadius: 30,
+                            spreadRadius: 10,
+                          ),
+                        ],
+                      ),
+                      child: BreathingTooth()
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
