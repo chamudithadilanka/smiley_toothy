@@ -144,7 +144,7 @@ class HomeScreen extends StatelessWidget {
                         boxShadow: [
                           BoxShadow(
                             color: kMainLoadingWhitContainerColor.withOpacity(
-                              0.2,
+                              0.3,
                             ),
                             blurRadius: 30,
                             spreadRadius: 10,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smiley_toothy/screens/calender_screen/calender_screen.dart';
 import 'package:smiley_toothy/screens/home_screen/home_screen.dart';
 import 'package:smiley_toothy/screens/nav_bar_with_main_screen/widgets/custom_bottum_nav_bar.dart';
 
@@ -15,7 +16,7 @@ class _MainScreenWithNavBarState extends State<MainScreenWithNavBar> {
 
   final List<Widget> _pages = const [
     HomeScreen(),
-    HomeScreen(),
+    CalenderScreen(),
     HomeScreen(),
   ];
 
