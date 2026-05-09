@@ -14,10 +14,10 @@ class MainScreenWithNavBar extends StatefulWidget {
 class _MainScreenWithNavBarState extends State<MainScreenWithNavBar> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomeScreen(),
-    CalenderScreen(),
-    HomeScreen(),
+  late final List<Widget> _pages = [
+    const HomeScreen(),
+    const CalenderScreen(),
+    const HomeScreen(), // ← your profile screen that reads HiveService.getUser()
   ];
 
   void _onItemTapped(int index) {

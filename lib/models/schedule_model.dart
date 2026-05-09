@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+part 'schedule_model.g.dart';
 
 @HiveType(typeId: 1)
 class ScheduleModel extends HiveObject {
@@ -17,11 +18,15 @@ class ScheduleModel extends HiveObject {
   @HiveField(4)
   late String dateKey;
 
+  @HiveField(5)
+  bool isCompleted;
+
   ScheduleModel({
     required this.title,
     required this.time,
     required this.durationMinutes,
     required this.isEnabled,
     required this.dateKey,
+    this.isCompleted = false,
   });
 }

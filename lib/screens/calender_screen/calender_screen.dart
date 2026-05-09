@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
+import 'package:smiley_toothy/screens/calender_screen/widgets/schedule_card.dart';
+import 'package:smiley_toothy/service/hive_service.dart';
 
 class CalenderScreen extends StatefulWidget {
   const CalenderScreen({super.key});
@@ -12,39 +14,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
   final DateTime _today = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   late final ScrollController _scrollController;
-
-  // Generate all days of the current month
-  List<DateTime> _getMonthDays() {
-    final firstDay = DateTime(_today.year, _today.month, 1);
-    final lastDay = DateTime(_today.year, _today.month + 1, 0);
-    return List.generate(
-      lastDay.day,
-          (i) => firstDay.add(Duration(days: i)),
-    );
-  }
-
-  String _getDayName(DateTime date) {
-    const days = ['sun', 'mon', 'tue', 'wed', 'thur', 'fri', 'sat'];
-    return days[date.weekday % 7];
-  }
-
-  String _getMonthName(DateTime date) {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[date.month - 1];
-  }
-
-  bool _isSelected(DateTime date) =>
-      date.year == _selectedDay.year &&
-          date.month == _selectedDay.month &&
-          date.day == _selectedDay.day;
-
-  bool _isToday(DateTime date) =>
-      date.year == _today.year &&
-          date.month == _today.month &&
-          date.day == _today.day;
 
   @override
   void initState() {
@@ -59,25 +28,79 @@ class _CalenderScreenState extends State<CalenderScreen> {
     super.dispose();
   }
 
+  List<DateTime> _getMonthDays() {
+    final firstDay = DateTime(_today.year, _today.month, 1);
+    final lastDay = DateTime(_today.year, _today.month + 1, 0);
+    return List.generate(lastDay.day, (i) => firstDay.add(Duration(days: i)));
+  }
+
+  String _dateKey(DateTime d) =>
+      '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+  String _getDayName(DateTime date) {
+    const days = ['sun', 'mon', 'tue', 'wed', 'thur', 'fri', 'sat'];
+    return days[date.weekday % 7];
+  }
+
+  String _getMonthName(DateTime date) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return months[date.month - 1];
+  }
+
+  bool _isSelected(DateTime date) => _dateKey(date) == _dateKey(_selectedDay);
+  bool _isToday(DateTime date) => _dateKey(date) == _dateKey(_today);
+
+  bool _isFuture(DateTime date) {
+    final todayOnly = DateTime(_today.year, _today.month, _today.day);
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    return dateOnly.isAfter(todayOnly);
+  }
+
+  _DayStatus _getDayStatus(DateTime date) {
+    if (_isFuture(date)) return _DayStatus.none;
+
+    final schedules = HivService.getSchedulesForDate(_dateKey(date));
+    if (schedules.isEmpty) return _DayStatus.none;
+
+    final enabled = schedules.where((s) => s.isEnabled).toList();
+    final completed = enabled.where((s) => s.isCompleted).toList();
+
+    if (enabled.isEmpty) return _DayStatus.none;
+    if (completed.isEmpty) return _DayStatus.none;
+    if (completed.length == enabled.length) return _DayStatus.full;
+
+    return _DayStatus.partial;
+  }
+
   @override
   Widget build(BuildContext context) {
     final monthDays = _getMonthDays();
+    final schedules = HivService.getSchedulesForDate(_dateKey(_selectedDay));
 
     return Scaffold(
       body: Column(
         children: [
-          // ── Top white calendar strip ──
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(
-                top: 56, left: 10, right: 10, bottom: 24),
-            decoration: BoxDecoration(
-              color: kMainLoadingWhitContainerColor,
-            ),
+            padding:
+            const EdgeInsets.only(top: 56, left: 10, right: 10, bottom: 24),
+            color: kMainLoadingWhitContainerColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Month + Year + "+" button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
@@ -91,17 +114,20 @@ class _CalenderScreenState extends State<CalenderScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: kMainBackgroundBlueDark,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 22,
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: kMainBackgroundBlueDark,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 22,
+                          ),
                         ),
                       ),
                     ],
@@ -110,9 +136,8 @@ class _CalenderScreenState extends State<CalenderScreen> {
 
                 const SizedBox(height: 20),
 
-                // ── Horizontally Scrollable Day Strip ──
                 SizedBox(
-                  height: 80,
+                  height: 85,
                   child: ListView.separated(
                     controller: _scrollController,
                     scrollDirection: Axis.horizontal,
@@ -123,49 +148,99 @@ class _CalenderScreenState extends State<CalenderScreen> {
                       final date = monthDays[index];
                       final selected = _isSelected(date);
                       final today = _isToday(date);
+                      final status = _getDayStatus(date);
+                      final isFuture = _isFuture(date);
 
                       return GestureDetector(
-                        onTap: () {
-                          setState(() => _selectedDay = date);
+                        onTap: isFuture
+                            ? null
+                            : () {
+                          setState(() {
+                            _selectedDay = date;
+                          });
                         },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 58,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            color: selected
-                                ? kMainBackgroundBlueDark
-                                : kMainBackgroundBlueNormal.withOpacity(0.4),
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(
-                              color: selected
-                                  ? kMainBackgroundBlueNormal
-                                  : kMainBackgroundBlueNormal.withOpacity(0.4),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        child: Opacity(
+                          opacity: isFuture ? 0.45 : 1.0,
+                          child: Stack(
+                            clipBehavior: Clip.none,
                             children: [
-                              Text(
-                                _getDayName(date),
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.85),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                width: 58,
+                                height: 72,
+                                decoration: BoxDecoration(
+                                  color: isFuture
+                                      ? Colors.grey.withOpacity(0.4)
+                                      : selected
+                                      ? kMainBackgroundBlueDark
+                                      : kMainBackgroundBlueNormal
+                                      .withOpacity(0.4),
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(
+                                    color: isFuture
+                                        ? Colors.grey.withOpacity(0.3)
+                                        : selected
+                                        ? kMainBackgroundBlueNormal
+                                        : kMainBackgroundBlueNormal
+                                        .withOpacity(0.4),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _getDayName(date),
+                                      style: TextStyle(
+                                        color: isFuture
+                                            ? Colors.white.withOpacity(0.4)
+                                            : Colors.white.withOpacity(0.85),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      '${date.day}',
+                                      style: TextStyle(
+                                        color: isFuture
+                                            ? Colors.white.withOpacity(0.4)
+                                            : Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: selected || today
+                                            ? FontWeight.bold
+                                            : FontWeight.w400,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 6),
-                              Text(
-                                '${date.day}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: selected || today
-                                      ? FontWeight.bold
-                                      : FontWeight.w400,
+
+                              if (!isFuture && status != _DayStatus.none)
+                                Positioned(
+                                  top: -6,
+                                  right: -6,
+                                  child: Container(
+                                    width: 20,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                      color: status == _DayStatus.full
+                                          ? Colors.greenAccent.shade400
+                                          : Colors.orangeAccent,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      status == _DayStatus.full
+                                          ? Icons.check
+                                          : Icons.remove,
+                                      size: 12,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                         ),
@@ -177,7 +252,6 @@ class _CalenderScreenState extends State<CalenderScreen> {
             ),
           ),
 
-          // ── Bottom gradient container ──
           Expanded(
             child: Container(
               width: double.infinity,
@@ -195,11 +269,39 @@ class _CalenderScreenState extends State<CalenderScreen> {
                   radius: BorderSide.strokeAlignOutside,
                 ),
               ),
-              child: Center(
-                child: Text(
-                  'Selected: ${_selectedDay.day} ${_getMonthName(_selectedDay)} ${_selectedDay.year}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
-                ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  Text(
+                    'Your Schedule',
+                    style: TextStyle(
+                      color: kMainLoadingWhitContainerColor,
+                      fontSize: 30,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    'Selected: ${_selectedDay.day} ${_getMonthName(_selectedDay)} ${_selectedDay.year}',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: schedules.length,
+                      itemBuilder: (_, i) => Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          BrushingTimerCard(
+                            schedule: schedules[i],
+                            onChanged: () => setState(() {}),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -208,3 +310,5 @@ class _CalenderScreenState extends State<CalenderScreen> {
     );
   }
 }
+
+enum _DayStatus { none, partial, full }

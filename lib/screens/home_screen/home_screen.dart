@@ -5,6 +5,8 @@ import 'package:smiley_toothy/screens/home_screen/widgets/breething_tooth.dart';
 import 'package:smiley_toothy/screens/home_screen/widgets/home_screen_container_box.dart';
 import 'package:smiley_toothy/screens/home_screen/widgets/home_screen_container_box_left.dart';
 
+import '../../service/hive_service.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -12,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEEE, MMMM d').format(now);
-
+    final user = HivService.getUser();
     // ── Responsive helpers ──────────────────────────────────────────
     final size = MediaQuery.of(context).size;
     final sw = size.width; // screen width
@@ -87,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                                 width: sw * 0.12,
                               ),
                               Text(
-                                ",  Chamuditha",
+                                ",  ${user!.name}",
                                 style: TextStyle(
                                   color: kMainLoadingIndicatorYellowdark,
                                   fontSize: fontSize,

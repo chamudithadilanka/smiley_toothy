@@ -2,6 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
 import 'package:smiley_toothy/screens/loading_screen/loading%20screen.dart';
+import 'package:smiley_toothy/screens/nav_bar_with_main_screen/main_screen.dart';
+
+import '../../../service/hive_service.dart';
+import '../../home_screen/home_screen.dart';
+import '../../register_screen/register_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -107,12 +112,13 @@ class _SplashScreenState extends State<SplashScreen>
       setState(() => showSecondImage = true);
 
       _secImageSlideController.forward().then((_) {
-        // ✅ Trigger final slide before navigating
-
-        // ✅ Navigate after final slide finishes
         Navigator.pushReplacement(
           context,
-          _createSlideRoute(const LoadingScreen()),
+          MaterialPageRoute(
+            builder: (_) => HivService.isRegistered()
+                ? const MainScreenWithNavBar()
+                : const RegisterScreen(),
+          ),
         );
       });
     });

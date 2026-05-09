@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
+import 'package:smiley_toothy/models/user_model.dart';
 import 'package:smiley_toothy/screens/nav_bar_with_main_screen/main_screen.dart';
 import 'package:smiley_toothy/screens/register_screen/widget/custom_button.dart';
 import 'package:smiley_toothy/screens/register_screen/widget/custom_text_filed.dart';
+
+import '../../service/hive_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -12,12 +15,59 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  // ── Controllers (NEW) ──────────────────────────────────────
+  final _nameController  = TextEditingController();
+  final _emailController = TextEditingController();
+  final _ageController   = TextEditingController();
   String? selectGender;
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  // ── Save to Hive + Navigate (NEW) ─────────────────────────
+  void _onRegister() {
+    final name  = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final age   = int.tryParse(_ageController.text.trim());
+
+    // Basic validation
+    if (name.isEmpty || email.isEmpty || age == null || selectGender == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all fields'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    // Save user to Hive
+    HivService.saveUser(UserModel(
+      name:   name,
+      email:  email,
+      age:    age,
+      gender: selectGender!,
+    ));
+
+    // Navigate (your existing navigation)
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MainScreenWithNavBar(),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth  = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -45,9 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       borderRadius: BorderRadius.circular(100),
                       boxShadow: [
                         BoxShadow(
-                          color: kMainLoadingWhitContainerColor.withValues(
-                            alpha: 0.2,
-                          ),
+                          color: kMainLoadingWhitContainerColor.withValues(alpha: 0.2),
                           spreadRadius: 3,
                           blurRadius: 3,
                         ),
@@ -56,29 +104,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         color: kMainLoadingIndicatorYellowdark,
                         width: 3,
                       ),
-                      image: DecorationImage(
-                        image: AssetImage(
-                          "assets/image/splash_screen_teeth.png",
-                        ),
+                      image: const DecorationImage(
+                        image: AssetImage("assets/image/splash_screen_teeth.png"),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: screenHeight * 0.06),
+
+                // ── Name field (controller added) ──
                 CustomTextInputRegisterScreen(
+                  controller: _nameController,   // ← ADD THIS
                   hintText: "Enter Your Name",
                   isNumber: false,
                   isHintText: true,
                   boarderRadius: 35,
                 ),
                 SizedBox(height: screenHeight * 0.02),
+
+                // ── Email field (controller added) ──
                 CustomTextInputRegisterScreen(
+                  controller: _emailController,  // ← ADD THIS
                   hintText: "Enter Your Email",
                   isNumber: false,
                   isHintText: true,
                   boarderRadius: 35,
                 ),
                 SizedBox(height: screenHeight * 0.02),
+
+                // ── Age row (controller added) ──
                 Row(
                   children: [
                     SizedBox(width: screenWidth * 0.07),
@@ -92,8 +146,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     Expanded(
                       child: SizedBox(
-                        width: screenWidth * 0.0,
                         child: CustomTextInputRegisterScreen(
+                          controller: _ageController,  // ← ADD THIS
                           isHintText: true,
                           hintText: "ex - 15",
                           isNumber: true,
@@ -104,6 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.02),
+                // ── Gender dropdown (unchanged) ──
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -122,19 +177,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: screenWidth * 0.04,
                         child: DropdownButtonFormField<String>(
                           value: selectGender,
-                          hint: Text(
+                          hint: const Text(
                             "Select",
                             style: TextStyle(color: Colors.white),
                           ),
                           style: TextStyle(
-                            color: kMainLoadingWhitContainerColor.withValues(
-                              alpha: 0.6,
-                            ),
+                            color: kMainLoadingWhitContainerColor.withValues(alpha: 0.6),
                             fontSize: 18,
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 15,
                             ),
@@ -167,9 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             );
                           }).toList(),
                           onChanged: (value) {
-                            setState(() {
-                              selectGender = value;
-                            });
+                            setState(() => selectGender = value);
                           },
                         ),
                       ),
@@ -178,15 +229,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 SizedBox(height: screenHeight * 0.11),
+
+                // ── Button (onPress now calls _onRegister) ──
                 CustomButtonRegister(
-                  onPress: () {
-                    Navigator.pushReplacement( // ✅ pushReplacement so back button won't return to register
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainScreenWithNavBar(),
-                      ),
-                    );
-                  },
+                  onPress: _onRegister,  // ← CHANGED from inline Navigator to _onRegister
                 ),
               ],
             ),

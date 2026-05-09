@@ -2,15 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smiley_toothy/screens/loading_screen/bloc_loading_screen/loading_bloc.dart';
 import 'package:smiley_toothy/screens/splash_screen/dart/splash_screen.dart';
+import 'package:smiley_toothy/service/hive_service.dart';
 
-void main() {
 
-  return runApp(
-      MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (_) => LoadingBloc()),
-          ],
-          child: const MyApp(),));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // ← required for Hive
+  await HivService.init();                  // ← init Hive before app starts
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => LoadingBloc()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -27,20 +33,21 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: "Smiley Toothy",
       theme: ThemeData(
-        textTheme: TextTheme(
-          headlineLarge: const TextStyle(
+        textTheme: const TextTheme(
+          headlineLarge: TextStyle(
             fontFamily: 'Inter',
             fontWeight: FontWeight.bold,
           ),
-          bodyLarge: const TextStyle(
-            fontFamily: 'Poppins',
-          ),
-          bodyMedium: const TextStyle(
-            fontFamily: 'Poppins',
-          ),
+          bodyLarge: TextStyle(fontFamily: 'Poppins'),
+          bodyMedium: TextStyle(fontFamily: 'Poppins'),
         ),
       ),
-      home: BlocProvider(create: (_) => LoadingBloc(), child: SplashScreen()),
+      // SplashScreen stays as entry point — it will navigate based on
+      // HiveService.isRegistered() after splash finishes
+      home: BlocProvider(
+        create: (_) => LoadingBloc(),
+        child: const SplashScreen(),
+      ),
     );
   }
 }

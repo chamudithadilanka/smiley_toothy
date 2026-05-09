@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:smiley_toothy/color_theme/color_theme.dart';
 
 class CustomTextInputRegisterScreen extends StatelessWidget {
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController? controller;
   final String hintText;
   final bool isNumber;
   final bool isHintText;
@@ -15,6 +15,7 @@ class CustomTextInputRegisterScreen extends StatelessWidget {
     required this.isNumber,
     required this.isHintText,
     required this.boarderRadius,
+    this.controller,
   });
 
   @override
